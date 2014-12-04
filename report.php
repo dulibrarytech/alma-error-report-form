@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $openurlraw = test_input($openurlraw);
             // Send email
             $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw);
-            $to = "library.csusm@gmail.com,libwebdev@csusm.edu,espinoza@csusm.edu,cashley@csusm.edu";
+            $to = "emailaddress@your.edu";
             $subject = "Link Resolver Problem: " . $summary;
             mail($to, $subject, $body, "From: {$email}");
             $submitted = "<div class=\"alert alert-success\" role=\"alert\">Thank you for reporting this issue. We will respond to you as soon as possible.</div>";
