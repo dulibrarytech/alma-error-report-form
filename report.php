@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $phone = test_input($_POST["phone"]);
             $email = test_input($_POST["email"]);
             $summary = test_input($_POST["summary"]);
-            $openurlraw = test_input($openurlraw);
+            $openurlclean = test_input($openurlraw);
             // Send email
             $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw);
             $to = "emailaddress@your.edu";
@@ -213,22 +213,21 @@ function test_input($data) {
 
 function compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw) {
     $body = "";
-    $body = $body . "Sender: \t\t" . $last_name . ", " . $first_name . "\n\n";
+    $body = $body . "Sender: \t\t" . $first_name . " " . $last_name . "\n\n";
     $body = $body . "Sender Contact Info: \n\n";
     $body = $body . "Email: \t" . $email . "\n\n";
     $body = $body . "Phone: \t" . $phone . "\n\n";
     $body = $body . "Summary: \t\t" . $summary . "\n\n";
     $body = $body . "Description: \t\t" . $description . "\n\n";
-    $body = $body . "OpenURL: \t\thttp://primo-pmtna01.hosted.exlibrisgroup.com/openurl/CALS_USM/cals_usm_services_page?debug=true&" . $openurlraw . "\n\n";
+    $body = $body . "OpenURL: \t\thttp://primo-pmtna01.hosted.exlibrisgroup.com/openurl/CALS_USM/cals_usm_services_page?debug=true&" . $openurlclean . "\n\n";
     $body = $body . "IP Address: \t\t" . $_SERVER['REMOTE_ADDR'] . "\n\n";
     $body = $body . "User Agent [Browser]: \t\t" . $_SERVER['HTTP_USER_AGENT'] . "\n\n";
     $body = $body . "Project: link-resolver\n\n";
     $body = $body . "Tracker: Bug\n\n";
     //$body = $body . "Referring URL: \t\t" . $_SERVER['HTTP_REFERER'] . "\n\n";
-    // $body = primo_retrieval($body, $openurlraw);
+    $body = primo_retrieval($body, $openurlraw);
     return $body;
 }
-/*
 function primo_retrieval($body, $openurlraw) {
     if(empty($openurlraw)) {
         $body = $body . "OpenURL is empty\n";
@@ -250,6 +249,5 @@ function primo_retrieval($body, $openurlraw) {
     }
     return $body;
 }
-*/
 
 ?>
