@@ -49,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = test_input($_POST["email"]);
             $summary = test_input($_POST["summary"]);
             $openurlclean = test_input($openurlraw);
+            $openurlclean = str_replace("amp;", "", $openurlclean);
             // Send email
             $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean);
             $to = "library.csusm@gmail.com,libwebdev@csusm.edu";
@@ -229,6 +230,7 @@ function compose_mail($description, $first_name, $last_name, $phone, $email, $su
     $body = $body . "Summary: \t\t" . $summary . "\n\n";
     $body = $body . "Description: \t\t" . $description . "\n\n";
     $body = $body . "OpenURL: \t\thttp://primo-pmtna01.hosted.exlibrisgroup.com/openurl/CALS_USM/cals_usm_services_page?debug=true&" . $openurlclean . "\n\n";
+    $body = $body . "Alma Interface OpenURL: \t\thttp://na01.alma.exlibrisgroup.com/view/uresolver/01CALS_USM/openurl?" . "&view=CALS_USM&svc_dat=viewit&env_type=test&req.skin=csusm_uresolver\n\n";
     $body = $body . "IP Address: \t\t" . $_SERVER['REMOTE_ADDR'] . "\n\n";
     $body = $body . "User Agent [Browser]: \t\t" . $_SERVER['HTTP_USER_AGENT'] . "\n\n";
     $body = $body . "Project: link-resolver\n\n";
@@ -243,7 +245,8 @@ function primo_retrieval($body, $openurlraw) {
     } else {
         $ctx = \OpenURL\ContextObject::loadKev($openurlraw);
         $body = $body . "Genre: " . $ctx->getReferent()->getValue('genre') . "\n";
-        $body = $body . "Journal/Book Title: " . $ctx->getReferent()->getValue('title') . "\n";
+        $body = $body . "Journal Title: " . $ctx->getReferent()->getValue('jtitle') . "\n";
+        $body = $body . "Book Title: " . $ctx->getReferent()->getValue('title') . "\n";
         $body = $body . "Article Title: " . $ctx->getReferent()->getValue('atitle') . "\n";
         $body = $body . "spage: " . $ctx->getReferent()->getValue('spage') . "\n";
         $body = $body . "isbn: " . $ctx->getReferent()->getValue('isbn') . "\n";
