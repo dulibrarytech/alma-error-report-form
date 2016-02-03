@@ -21,7 +21,7 @@ $error = null;
 # the response from reCAPTCHA
 $resp = null;
 
-$privatekey = "6LeFUwQAAAAAABXNJNiwlEF32xPv42hdWAlIH4dY";
+$privatekey = "6LdzgBETAAAAAL7BMnaHG8z2jOJHoG3FLSaYzO7Y";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Let's save input data so that when a data-validation failure should occur, we can pre-fill the forms
@@ -150,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label class="control-label col-md-2" for="recaptcha">Help stop spam<em>*</em></label>
             <div class="col-md-10">
               <?php
-                $publickey = "6LeFUwQAAAAAAIbSLnPixnCYuU6JQT8G8Hn27kfA";
+                $publickey = "6LdzgBETAAAAAGtZ9PA3LE_ugUT6sqL-nOWij3Mv";
                 echo recaptcha_get_html($publickey, $error, "true");
               ?>
               <h4><?php echo $recaptcha_failed;?></h4>
