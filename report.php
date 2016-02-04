@@ -230,7 +230,7 @@ function compose_mail($description, $first_name, $last_name, $phone, $email, $su
     $body = $body . "Summary: \t\t" . $summary . "\n\n";
     $body = $body . "Description: \t\t" . $description . "\n\n";
     $body = $body . "OpenURL: \t\thttp://primo-pmtna01.hosted.exlibrisgroup.com/openurl/CALS_USM/cals_usm_services_page?debug=true&" . $openurlclean . "\n\n";
-    $body = $body . "Alma Interface OpenURL: \t\thttp://na01.alma.exlibrisgroup.com/view/uresolver/01CALS_USM/openurl?" . $openurlclean . "&view=CALS_USM&svc_dat=viewit&env_type=test&req.skin=csusm_uresolver\n\n";
+    //$body = $body . "Alma Interface OpenURL: \t\thttp://na01.alma.exlibrisgroup.com/view/uresolver/01CALS_USM/openurl?" . $openurlclean . "&view=CALS_USM&svc_dat=viewit&env_type=test&req.skin=csusm_uresolver\n\n";
     $body = $body . "IP Address: \t\t" . $_SERVER['REMOTE_ADDR'] . "\n\n";
     $body = $body . "User Agent [Browser]: \t\t" . $_SERVER['HTTP_USER_AGENT'] . "\n\n";
     $body = $body . "Project: link-resolver\n\n";
