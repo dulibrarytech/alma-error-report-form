@@ -8,6 +8,8 @@
 require_once 'src/OpenURL/ContextObject.php';
 require_once 'src/OpenURL/Entity.php';
 require_once('recaptchalib.php');
+include('config/settings.php');
+
 $openurlraw = $_SERVER['QUERY_STRING'];
 $description = $first_name = $last_name = $phone = $email = $summary = "";
 $to = $from = $subject = "";
@@ -21,7 +23,7 @@ $error = null;
 # the response from reCAPTCHA
 $resp = null;
 
-$privatekey = "6LdzgBETAAAAAL7BMnaHG8z2jOJHoG3FLSaYzO7Y";
+$privatekey = $recaptcha_private_key;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Let's save input data so that when a data-validation failure should occur, we can pre-fill the forms
@@ -151,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label class="control-label col-md-2" for="recaptcha">Help stop spam<em>*</em></label>
             <div class="col-md-10">
               <?php
-                $publickey = "6LdzgBETAAAAAGtZ9PA3LE_ugUT6sqL-nOWij3Mv";
+                $publickey = $recaptcha_public_key;
                 echo recaptcha_get_html($publickey, $error, "true");
               ?>
               <h4><?php echo $recaptcha_failed;?></h4>
