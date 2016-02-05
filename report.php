@@ -7,7 +7,7 @@
  */
 require_once 'src/OpenURL/ContextObject.php';
 require_once 'src/OpenURL/Entity.php';
-require_once('recaptchalib.php');
+require_once('src/recaptchalib.php');
 include('config/settings.php');
 
 $openurlraw = $_SERVER['QUERY_STRING'];
@@ -50,11 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $phone = test_input($_POST["phone"]);
             $email = test_input($_POST["email"]);
             $summary = test_input($_POST["summary"]);
-            $openurlclean = test_input($openurlraw);
             $openurlclean = str_replace("amp;", "", $openurlclean);
             // Send email
             $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean);
-            $to = "library.csusm@gmail.com,libwebdev@csusm.edu";
+            $to = $email_destinations;
             $subject = "Link Resolver Problem: " . $summary;
             mail($to, $subject, $body, "From: {$email}");
             $submitted = "<div class=\"alert alert-success\" role=\"alert\">Thank you for reporting this issue. We will respond to you as soon as possible.</div>";
@@ -208,7 +207,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-4199304-3', 'auto');
+    ga('create', '<?php echo $google_analytics_id;?>', 'auto');
     ga('send', 'pageview');
 
   </script>
@@ -232,12 +231,10 @@ function compose_mail($description, $first_name, $last_name, $phone, $email, $su
     $body = $body . "Summary: \t\t" . $summary . "\n\n";
     $body = $body . "Description: \t\t" . $description . "\n\n";
     $body = $body . "OpenURL: \t\thttp://primo-pmtna01.hosted.exlibrisgroup.com/openurl/CALS_USM/cals_usm_services_page?debug=true&" . $openurlclean . "\n\n";
-    //$body = $body . "Alma Interface OpenURL: \t\thttp://na01.alma.exlibrisgroup.com/view/uresolver/01CALS_USM/openurl?" . $openurlclean . "&view=CALS_USM&svc_dat=viewit&env_type=test&req.skin=csusm_uresolver\n\n";
     $body = $body . "IP Address: \t\t" . $_SERVER['REMOTE_ADDR'] . "\n\n";
     $body = $body . "User Agent [Browser]: \t\t" . $_SERVER['HTTP_USER_AGENT'] . "\n\n";
     $body = $body . "Project: link-resolver\n\n";
     $body = $body . "Tracker: Bug\n\n";
-    //$body = $body . "Referring URL: \t\t" . $_SERVER['HTTP_REFERER'] . "\n\n";
     $body = primo_retrieval($body, $openurlraw);
     return $body;
 }
