@@ -50,6 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $phone = test_input($_POST["phone"]);
             $email = test_input($_POST["email"]);
             $summary = test_input($_POST["summary"]);
+            $openurlclean = test_input($openurlraw);
             $openurlclean = str_replace("amp;", "", $openurlclean);
             // Send email
             $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean);
