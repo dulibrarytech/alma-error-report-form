@@ -53,11 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $openurlclean = test_input($openurlraw);
             $openurlclean = str_replace("amp;", "", $openurlclean);
             // Send email
-            $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean);
+            $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url);
             $to = $email_destinations;
-            $subject = "Link Resolver Problem: " . $summary;
+            $subject = $email_subject_prefix . $summary;
             mail($to, $subject, $body, "From: {$email}");
-            $submitted = "<div class=\"alert alert-success\" role=\"alert\">Thank you for reporting this issue. We will respond to you as soon as possible.</div>";
+            $submitted = "<div class=\"alert alert-success\" role=\"alert\">" . $success_response_text . "</div>";
             // Clear input data when submitted
             $description = $first_name = $last_name = $phone = $email = $summary = "";
         }
@@ -223,7 +223,7 @@ function test_input($data) {
     return $data;
 }
 
-function compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean) {
+function compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url) {
     $body = "";
     $body = $body . "Sender: \t\t" . $first_name . " " . $last_name . "\n\n";
     $body = $body . "Sender Contact Info: \n\n";
@@ -231,7 +231,7 @@ function compose_mail($description, $first_name, $last_name, $phone, $email, $su
     $body = $body . "Phone: \t" . $phone . "\n\n";
     $body = $body . "Summary: \t\t" . $summary . "\n\n";
     $body = $body . "Description: \t\t" . $description . "\n\n";
-    $body = $body . "OpenURL: \t\thttp://primo-pmtna01.hosted.exlibrisgroup.com/openurl/CALS_USM/cals_usm_services_page?debug=true&" . $openurlclean . "\n\n";
+    $body = $body . "OpenURL: \t\t" . $openurl_base_url . $openurlclean . "\n\n";
     $body = $body . "IP Address: \t\t" . $_SERVER['REMOTE_ADDR'] . "\n\n";
     $body = $body . "User Agent [Browser]: \t\t" . $_SERVER['HTTP_USER_AGENT'] . "\n\n";
     $body = $body . "Project: link-resolver\n\n";
@@ -261,5 +261,4 @@ function primo_retrieval($body, $openurlraw) {
     }
     return $body;
 }
-
 ?>
