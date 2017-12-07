@@ -9,6 +9,9 @@ require_once 'src/OpenURL/ContextObject.php';
 require_once 'src/OpenURL/Entity.php';
 require_once('src/recaptchalib.php');
 include('config/settings.php');
+include('SimpleLogger.php');
+
+$logger = new SimpleLogger();
 
 $openurlraw = $_SERVER['QUERY_STRING'];
 $description = $first_name = $last_name = $phone = $email = $summary = "";
@@ -56,10 +59,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url);
             $to = $email_destinations;
             $subject = $email_subject_prefix . $summary;
-            mail($to, $subject, $body, "From: {$email}");
+              $logger->log("Mail Send to: " . $to . " body: " . $body);
+            $mailStatus = mail($to, $subject, $body, "From: {$email}");
+              $logger->log("Mail status: " . $mailStatus == false ? "F" : "T");
             $submitted = "<div class=\"alert alert-success\" role=\"alert\">" . $success_response_text . "</div>";
             // Clear input data when submitted
             $description = $first_name = $last_name = $phone = $email = $summary = "";
+            // Log submission data
+            
         }
     }
     else {
