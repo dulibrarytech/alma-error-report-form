@@ -10,15 +10,20 @@ require_once 'src/OpenURL/Entity.php';
 require_once('src/recaptchalib.php');
 include('config/settings.php');
 include('SimpleLogger.php');
+//require_once('src/SwiftMailer/lib/classes/Swift/SmtpTransport.php');
+require_once 'vendor/autoload.php';
 
-$logger = new SimpleLogger();
-
+$logger = new SimpleLogger("logs/");
 $openurlraw = $_SERVER['QUERY_STRING'];
 $description = $first_name = $last_name = $phone = $email = $summary = "";
 $to = $from = $subject = "";
 $body = "";
 $submitted = "";
 $recaptcha_failed = "";
+
+// Swift Mailer config
+$transport = (new Swift_SmtpTransport('mailout.du.edu', 25));
+$mailer = new Swift_Mailer($transport);
 
 $privatekey = $publickey = "";
 # the error code from reCAPTCHA, if any
@@ -59,14 +64,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url);
             $to = $email_destinations;
             $subject = $email_subject_prefix . $summary;
-              $logger->log("Mail Send to: " . $to . " body: " . $body);
-            $mailStatus = mail($to, $subject, $body, "From: {$email}");
-              $logger->log("Mail status: " . $mailStatus == false ? "F" : "T");
+               $logger->log("\n\nSUBJECT: " . $subject . "\nBODY:\n" . $body . "\n\n\n\n\n\n", "Form Submission");
+
+            //mail($to, $subject, $body, "From: {$email}");
+            $message = (new Swift_Message($subject))
+              ->setFrom($email)
+              ->setTo($to)
+              ->setBody($body)
+            ;
+            $result = $mailer->send($message);
+
             $submitted = "<div class=\"alert alert-success\" role=\"alert\">" . $success_response_text . "</div>";
             // Clear input data when submitted
             $description = $first_name = $last_name = $phone = $email = $summary = "";
-            // Log submission data
-            
         }
     }
     else {
