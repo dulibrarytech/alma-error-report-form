@@ -58,10 +58,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $phone = test_input($_POST["phone"]);
             $email = test_input($_POST["email"]);
             $summary = test_input($_POST["summary"]);
+            $affiliation = test_input($_POST["affiliation"]);
+            $schoolAffiliation = test_input($_POST["schoolAffiliation"]);
             $openurlclean = test_input($openurlraw);
             $openurlclean = str_replace("amp;", "", $openurlclean);
             // Send email
-            $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url);
+            $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url, $affiliation, $schoolAffiliation);
             $to = $email_destinations;
             $subject = $email_subject_prefix . $summary;
                $logger->log("\n\nSUBJECT: " . $subject . "\nBODY:\n" . $body . "\n\n\n\n\n\n", "Form Submission");
@@ -170,21 +172,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="form-group" style="">
             <label class="control-label col-md-2">Affiliation</label>
             <div class="radio col-md-10">
-              <label><input type="radio" name="affiliation" value="student" checked>Student</label><br />
-              <label><input type="radio" name="affiliation" value="faculty">Faculty</label><br />
-              <label><input type="radio" name="affiliation" value="staff">Staff</label><br />
-              <label><input type="radio" name="affiliation" value="library_staff">Library Staff</label><br />
-              <label><input type="radio" name="affiliation" value="public_other">Public / Other</label>
+              <label><input type="radio" name="affiliation" checked>Student</label><br />
+              <label><input type="radio" name="affiliation">Faculty</label><br />
+              <label><input type="radio" name="affiliation">Staff</label><br />
+              <label><input type="radio" name="affiliation">Library Staff</label><br />
+              <label><input type="radio" name="affiliation">Public / Other</label>
             </div>
           </div>
 
           <div class="form-group" style="">
             <label class="control-label col-md-2">School Affiliation</label>
             <div class="radio col-md-10">
-              <label><input type="radio" name="school-affiliation" value="du" checked>DU</label><br />
-              <label><input type="radio" name="school-affiliation" value="law">Law</label><br />
-              <label><input type="radio" name="school-affiliation" value="iliff">Iliff</label><br />
-              <label><input type="radio" name="school-affiliation" value="other">Other</label>
+              <label><input type="radio" name="school-affiliation" checked>DU</label><br />
+              <label><input type="radio" name="school-affiliation">Law</label><br />
+              <label><input type="radio" name="school-affiliation">Iliff</label><br />
+              <label><input type="radio" name="school-affiliation">Other</label>
             </div>
           </div>
 
@@ -266,12 +268,14 @@ function test_input($data) {
     return $data;
 }
 
-function compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url) {
+function compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url, $affiliation, $schoolAffiliation) {
     $body = "";
     $body = $body . "Sender: \t\t" . $first_name . " " . $last_name . "\n\n";
     $body = $body . "Sender Contact Info: \n\n";
     $body = $body . "Email: \t" . $email . "\n\n";
     $body = $body . "Phone: \t" . $phone . "\n\n";
+    $body = $body . "Affiliation: \t" . $affiliation . "\n\n";
+    $body = $body . "School Affiliation: \t" . $schoolAffiliation . "\n\n";
     $body = $body . "Summary: \t\t" . $summary . "\n\n";
     $body = $body . "Description: \t\t" . $description . "\n\n";
     $body = $body . "OpenURL: \t\t" . $openurl_base_url . $openurlclean . "\n\n";
