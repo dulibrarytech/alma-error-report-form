@@ -166,10 +166,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <i class="fa form-control-feedback"></i>
             </div>
           </div>
-
-          <div class="form-group col-md-6" style="">
-            <label class="control-label col-md-5">Affiliation</label>
-            <div class="radio col-md-7">
+          
+          <div class="form-group" style="">
+            <label class="control-label col-md-2">Affiliation</label>
+            <div class="radio col-md-10">
               <label><input type="radio" name="affiliation" value="student" checked>Student</label><br />
               <label><input type="radio" name="affiliation" value="faculty">Faculty</label><br />
               <label><input type="radio" name="affiliation" value="staff">Staff</label><br />
@@ -178,9 +178,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
           </div>
 
-          <div class="form-group col-md-6" style="">
-            <label class="control-label col-md-5">School Affiliation</label>
-            <div class="radio col-md-7">
+          <div class="form-group" style="">
+            <label class="control-label col-md-2">School Affiliation</label>
+            <div class="radio col-md-10">
               <label><input type="radio" name="school-affiliation" value="du" checked>DU</label><br />
               <label><input type="radio" name="school-affiliation" value="law">Law</label><br />
               <label><input type="radio" name="school-affiliation" value="iliff">Iliff</label><br />
