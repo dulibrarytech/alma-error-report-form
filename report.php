@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = test_input($_POST["email"]);
             $summary = test_input($_POST["summary"]);
             $affiliation = test_input($_POST["affiliation"]);
-            $schoolAffiliation = test_input($_POST["schoolAffiliation"]);
+            $schoolAffiliation = test_input($_POST["school_affiliation"]);
             $openurlclean = test_input($openurlraw);
             $openurlclean = str_replace("amp;", "", $openurlclean);
             // Send email
@@ -172,21 +172,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="form-group col-md-6" style="">
             <label class="control-label col-md-5">Affiliation</label>
             <div class="radio col-md-7">
-              <label><input type="radio" name="affiliation" checked>Student</label><br />
-              <label><input type="radio" name="affiliation">Faculty</label><br />
-              <label><input type="radio" name="affiliation">Staff</label><br />
-              <label><input type="radio" name="affiliation">Library Staff</label><br />
-              <label><input type="radio" name="affiliation">Public / Other</label>
+              <label><input type="radio" name="affiliation" value="Student" checked>Student</label><br />
+              <label><input type="radio" name="affiliation" value="Faculty">Faculty</label><br />
+              <label><input type="radio" name="affiliation" value="Staff">Staff</label><br />
+              <label><input type="radio" name="affiliation" value="Library Staff">Library Staff</label><br />
+              <label><input type="radio" name="affiliation" value="Public / Other">Public / Other</label>
             </div>
           </div>
 
           <div class="form-group col-md-6" style="">
             <label class="control-label col-md-5">School Affiliation</label>
             <div class="radio col-md-7">
-              <label><input type="radio" name="schoolAffiliation" checked>DU</label><br />
-              <label><input type="radio" name="schoolAffiliation">Law</label><br />
-              <label><input type="radio" name="schoolAffiliation">Iliff</label><br />
-              <label><input type="radio" name="schoolAffiliation">Other</label>
+              <label><input type="radio" name="school_affiliation" value="DU" checked>DU</label><br />
+              <label><input type="radio" name="school_affiliation" value="Law">Law</label><br />
+              <label><input type="radio" name="school_affiliation" value="Iliff">Iliff</label><br />
+              <label><input type="radio" name="school_affiliation" value="Other">Other</label>
             </div>
           </div>
 
