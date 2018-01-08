@@ -135,21 +135,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
           </div>
           <div class="form-group has-feedback">
-            <label class="control-label col-md-2" for="description">Description <em>*</em></label>
+            <label class="control-label col-md-2" for="description">Description<em>*</em></label>
             <div class="col-md-10">
               <textarea class="form-control" id="description" name="description" rows="5"><?php echo $description; ?></textarea>
               <i class="fa form-control-feedback"></i>
             </div>
           </div>
           <div class="form-group has-feedback">
-            <label class="control-label col-md-2" for="email">E-mail <em>*</em></label>
+            <label class="control-label col-md-2" for="email">E-mail<em>*</em></label>
             <div class="col-md-7">
               <input type="email" class="form-control" id="email" name="email" value="<?php echo $email; ?>" placeholder="">
               <i class="fa form-control-feedback"></i>
             </div>
           </div>
           <div class="form-group has-feedback">
-            <label class="control-label col-md-2">Name </label>
+            <label class="control-label col-md-2">Name</label>
             <div class="col-md-4">
               <label class="control-label sr-only" for="first_name">First</label>
               <input type="text" class="form-control " id="first_name" name="first_name" placeholder="First Name" value="<?php echo $first_name; ?>">
@@ -162,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-md-2" for="phone">Phone </label>
+            <label class="control-label col-md-2" for="phone">Phone</label>
             <div class="col-md-5">
               <input type="text" class="form-control" id="phone" name="phone" value="<?php echo $phone; ?>" placeholder="">
               <i class="fa form-control-feedback"></i>
@@ -170,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           </div>
           
           <div class="form-group" style="">
-            <label class="control-label col-md-2">Affiliation</label>
+            <label class="control-label col-md-2">Affiliation<em>*</em></label>
             <div class="radio col-md-10">
               <label><input type="radio" name="affiliation" value="Student" checked>Student</label><br />
               <label><input type="radio" name="affiliation" value="Faculty">Faculty</label><br />
@@ -181,7 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           </div>
 
           <div class="form-group" style="">
-            <label class="control-label col-md-2">School Affiliation</label>
+            <label class="control-label col-md-2">School Affiliation<em>*</em></label>
             <div class="radio col-md-10">
               <label><input type="radio" name="school_affiliation" value="DU" checked>DU</label><br />
               <label><input type="radio" name="school_affiliation" value="Law">Law</label><br />
