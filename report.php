@@ -68,13 +68,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $subject = $email_subject_prefix . $summary;
                $logger->log("\n\nSUBJECT: " . $subject . "\nBODY:\n" . $body . "\n\n\n\n\n\n", "Form Submission");
 
-            //mail($to, $subject, $body, "From: {$email}");
-            $message = (new Swift_Message($subject))
-              ->setFrom($email)
-              ->setTo($to)
-              ->setBody($body)
-            ;
+            $message = new Swift_Message($subject);
+            $message->setFrom($email);
+            $message->setTo($to);
+            $message->setBody($body);
             $result = $mailer->send($message);
+           //$result = $mailer->send($message);
 
             $submitted = "<div class=\"alert alert-success\" role=\"alert\">" . $success_response_text . "</div>";
             // Clear input data when submitted
@@ -119,6 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       theme : 'clean'
     };
   </script>
+  <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
   <div class="container">

@@ -119,13 +119,18 @@ function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
         if ($error) {
            $errorpart = "&amp;error=" . $error;
         }
-        return '<script type="text/javascript" src="'. $server . '/challenge?k=' . $pubkey . $errorpart . '"></script>
+        
+  //       $html = '<script type="text/javascript" src="'. $server . '/challenge?k=' . $pubkey . $errorpart . '"></script>
 
-	<noscript>
-  		<iframe src="'. $server . '/noscript?k=' . $pubkey . $errorpart . '" height="300" width="500" frameborder="0"></iframe><br/>
-  		<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-  		<input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
-	</noscript>';
+  // <noscript>
+  //     <iframe src="'. $server . '/noscript?k=' . $pubkey . $errorpart . '" height="300" width="500" frameborder="0"></iframe><br/>
+  //     <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+  //     <input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
+  // </noscript>';
+
+        $html = '<div class="g-recaptcha" data-sitekey="6Lf4M0wUAAAAAB0rGgVYn8MJGLYsuXVVrvqrDoqV"></div>';
+
+        return $html;
 }
 
 

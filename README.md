@@ -12,3 +12,8 @@ https://biblio.csusm.edu/primo_fx/report.php?rft.issn={rft.issn}&rft.eissn={rft.
 Rft.year and pages may need adjustment.
 
 In our workflow, we send the email to Redmine which automatically generates a ticket. Redmine than notifies our Alma SysAdmins. We are tracking updates and issue resolution via the tickets in Redmine.
+
+
+
+
+// Main file: 	report.php
