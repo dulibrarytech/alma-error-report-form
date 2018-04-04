@@ -7,11 +7,15 @@
  */
 require_once 'src/OpenURL/ContextObject.php';
 require_once 'src/OpenURL/Entity.php';
-require_once('src/recaptchalib.php');
+//require_once('src/recaptchalib.php');
 include('config/settings.php');
 include('SimpleLogger.php');
 //require_once('src/SwiftMailer/lib/classes/Swift/SmtpTransport.php');
 require_once 'vendor/autoload.php';
+
+// Recaptcha V2
+use Phelium\Component\reCAPTCHA;
+$reCAPTCHA = new reCAPTCHA($recaptcha_public_key, $recaptcha_private_key);
 
 $logger = new SimpleLogger("logs/");
 $openurlraw = $_SERVER['QUERY_STRING'];
@@ -41,16 +45,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = $_POST["phone"];
     $email = $_POST["email"];
     $summary = $_POST["summary"];
-    if ($_POST["recaptcha_response_field"]) {
-        $resp = recaptcha_check_answer($privatekey,
-            $_SERVER["REMOTE_ADDR"],
-            $_POST["recaptcha_challenge_field"],
-            $_POST["recaptcha_response_field"]);
-        if (!$resp->is_valid) {
-            // Will need to pre-fill form.  (Note: This form, except reCAPTCHA, is validated using jQuery from http://ajax.aspnetcdn.com.)
-            $recaptcha_failed = 'Please retry.  reCAPTCHA said: "' . $resp->error . '"';
-        }
-        else {
+
+    // Recaptcha  
+    if ($_POST["g-recaptcha-response"]) {
+
+        // Recaptcha V1
+        // $resp = recaptcha_check_answer($privatekey,
+        //     $_POST["g-recaptcha-response"],
+        //     $_SERVER["REMOTE_ADDR"]);
+        // if ($resp->is_valid) {
+        
+        // Recaptcha V2
+        if ($reCAPTCHA->isValid($_POST['g-recaptcha-response'])) { 
             // Validate input data
             $description = test_input($_POST["description"]);
             $first_name = test_input($_POST["first_name"]);
@@ -79,10 +85,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Clear input data when submitted
             $description = $first_name = $last_name = $phone = $email = $summary = "";
         }
+        else {
+            // Will need to pre-fill form.  (Note: This form, except reCAPTCHA, is validated using jQuery from http://ajax.aspnetcdn.com.)
+            $recaptcha_failed = 'Please retry.  reCAPTCHA said: "' . $resp->error . '"';
+        }
     }
     else {
         // Will need to pre-fill form (Note: This form, except reCAPTCHA, is validated using jQuery from http://ajax.aspnetcdn.com.)
-        $recaptcha_failed = 'This field is a required.';
+        $recaptcha_failed = 'Please retry.';
     }
 }
 ?>
@@ -118,7 +128,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       theme : 'clean'
     };
   </script>
-  <script src='https://www.google.com/recaptcha/api.js'></script>
+  <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
+  <?php echo $reCAPTCHA->getScript(); ?>
 </head>
 <body>
   <div class="container">
@@ -198,8 +209,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label class="control-label col-md-2" for="recaptcha">Help stop spam<em>*</em></label>
             <div class="col-md-10">
               <?php
-                $publickey = $recaptcha_public_key;
-                echo recaptcha_get_html($publickey, $error, "true");
+                // $publickey = $recaptcha_public_key;
+                // echo recaptcha_get_html($publickey, $error, "true");
+
+                // V2
+                echo $reCAPTCHA->getHtml();
               ?>
               <h4><?php echo $recaptcha_failed;?></h4>
             </div>
@@ -229,9 +243,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               required: true
             },
             summary: {
-              required: true
-            },
-            recaptcha: { // jQuery.validate from http://ajax.aspnetcdn.com does not work with recaptcha.
               required: true
             }
           },

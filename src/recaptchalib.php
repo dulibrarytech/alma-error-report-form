@@ -1,4 +1,4 @@
-<?php
+3<?php
 /*
  * This is a PHP library that handles calling reCAPTCHA.
  *    - Documentation and latest version
@@ -78,6 +78,7 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 
         $response = '';
         if( false == ( $fs = @fsockopen($host, $port, $errno, $errstr, 10) ) ) {
+                echo "HOST:" . $host . "\n";
                 die ('Could not open socket');
         }
 
@@ -128,6 +129,7 @@ function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
   //     <input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
   // </noscript>';
 
+        // V2
         $html = '<div class="g-recaptcha" data-sitekey="6Lf4M0wUAAAAAB0rGgVYn8MJGLYsuXVVrvqrDoqV"></div>';
 
         return $html;
@@ -154,36 +156,78 @@ class ReCaptchaResponse {
   * @param array $extra_params an array of extra variables to post to the server
   * @return ReCaptchaResponse
   */
-function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response, $extra_params = array())
+// function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response, $extra_params = array())
+// {
+// 	if ($privkey == null || $privkey == '') {
+// 		die ("To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>");
+// 	}
+
+// 	if ($remoteip == null || $remoteip == '') {
+// 		die ("For security reasons, you must pass the remote ip to reCAPTCHA");
+// 	}
+
+	
+	
+//         //discard spam submissions
+//         if ($challenge == null || strlen($challenge) == 0 || $response == null || strlen($response) == 0) {
+//                 $recaptcha_response = new ReCaptchaResponse();
+//                 $recaptcha_response->is_valid = false;
+//                 $recaptcha_response->error = 'incorrect-captcha-sol';
+//                 return $recaptcha_response;
+//         }
+
+//         $response = _recaptcha_http_post (RECAPTCHA_VERIFY_SERVER, "/recaptcha/api/verify",
+//                                           array (
+//                                                  'privatekey' => $privkey,
+//                                                  'remoteip' => $remoteip,
+//                                                  'challenge' => $challenge,
+//                                                  'response' => $response
+//                                                  ) + $extra_params
+//                                           );
+
+//         $answers = explode ("\n", $response [1]);
+//         $recaptcha_response = new ReCaptchaResponse();
+
+//         if (trim ($answers [0]) == 'true') {
+//                 $recaptcha_response->is_valid = true;
+//         }
+//         else {
+//                 $recaptcha_response->is_valid = false;
+//                 $recaptcha_response->error = $answers [1];
+//         }
+//         return $recaptcha_response;
+
+// }
+
+// V2
+function recaptcha_check_answer ($privkey, $response, $remoteip, $extra_params = array())
 {
-	if ($privkey == null || $privkey == '') {
-		die ("To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>");
-	}
+  if ($privkey == null || $privkey == '') {
+    die ("To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>");
+  }
 
-	if ($remoteip == null || $remoteip == '') {
-		die ("For security reasons, you must pass the remote ip to reCAPTCHA");
-	}
+  if ($remoteip == null || $remoteip == '') {
+    die ("For security reasons, you must pass the remote ip to reCAPTCHA");
+  }
 
-	
-	
+  
+  
         //discard spam submissions
-        if ($challenge == null || strlen($challenge) == 0 || $response == null || strlen($response) == 0) {
+        if ($response == null || strlen($response) == 0) {
                 $recaptcha_response = new ReCaptchaResponse();
                 $recaptcha_response->is_valid = false;
                 $recaptcha_response->error = 'incorrect-captcha-sol';
                 return $recaptcha_response;
         }
 
-        $response = _recaptcha_http_post (RECAPTCHA_VERIFY_SERVER, "/recaptcha/api/verify",
+        $response = _recaptcha_http_post (RECAPTCHA_VERIFY_SERVER, "/recaptcha/api/siteverify",
                                           array (
-                                                 'privatekey' => $privkey,
-                                                 'remoteip' => $remoteip,
-                                                 'challenge' => $challenge,
+                                                 'secret' => $privkey,
                                                  'response' => $response
-                                                 ) + $extra_params
+                                                 )
                                           );
-
-        $answers = explode ("\n", $response [1]);
+          echo "RESPONSE:" . print_r($response,true) . "\n";
+        $answers = explode ("\n", $response [0]);
         $recaptcha_response = new ReCaptchaResponse();
 
         if (trim ($answers [0]) == 'true') {
@@ -191,10 +235,9 @@ function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response, $ex
         }
         else {
                 $recaptcha_response->is_valid = false;
-                $recaptcha_response->error = $answers [1];
+                $recaptcha_response->error = print_r($answers,true);
         }
         return $recaptcha_response;
-
 }
 
 /**

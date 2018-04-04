@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Phelium\\Component\\' => array($vendorDir . '/phelium/recaptcha/src'),
 );
