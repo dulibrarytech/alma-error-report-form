@@ -69,10 +69,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $openurlclean = test_input($openurlraw);
             $openurlclean = str_replace("amp;", "", $openurlclean);
             // Send email
-            $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url, $affiliation, $schoolAffiliation, $permalink_base_url);
+            $body = compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url, $affiliation, $schoolAffiliation, $permalink_base_url, $logger);
             $to = $email_destinations;
             $subject = $email_subject_prefix . $summary;
-               $logger->log("\n\nSUBJECT: " . $subject . "\nBODY:\n" . $body . "\n\n\n\n\n\n", "Form Submission");
+               //$logger->log("\n\nSUBJECT: " . $subject . "\nBODY:\n" . $body . "\n\n\n\n\n\n", "Form Submission");
 
             $message = new Swift_Message($subject);
             $message->setFrom($email);
@@ -279,7 +279,7 @@ function test_input($data) {
     return $data;
 }
 
-function compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url, $affiliation, $schoolAffiliation, $permalink_base_url) {
+function compose_mail($description, $first_name, $last_name, $phone, $email, $summary, $openurlraw, $openurlclean, $openurl_base_url, $affiliation, $schoolAffiliation, $permalink_base_url, $l) {
     $body = "";
     $body = $body . "Sender: \t\t" . $first_name . " " . $last_name . "\n\n";
     $body = $body . "Sender Contact Info: \n\n";
@@ -294,10 +294,11 @@ function compose_mail($description, $first_name, $last_name, $phone, $email, $su
     $body = $body . "User Agent [Browser]: \t\t" . $_SERVER['HTTP_USER_AGENT'] . "\n\n";
     $body = $body . "Project: link-resolver\n\n";
     $body = $body . "Tracker: Bug\n\n";
-    $body = primo_retrieval($body, $openurlraw, $permalink_base_url);
+    $body = primo_retrieval($body, $openurlraw, $permalink_base_url, $l);
     return $body;
 }
-function primo_retrieval($body, $openurlraw, $permalink_base_url) {
+function primo_retrieval($body, $openurlraw, $permalink_base_url, $l) {
+
     if(empty($openurlraw)) {
         $body = $body . "OpenURL is empty\n";
     } else {
@@ -317,9 +318,18 @@ function primo_retrieval($body, $openurlraw, $permalink_base_url) {
         $body = $body . "rfr_id: " . $ctx->getReferent()->getValue('id') . "\n";
         $body = $body . $ctx->toKev() . "\n";
 
+        // Extract the doc id, build the permalink to the resource.
         $data = $ctx->getReferent()->getValue('dat');
-        $permalink = $permalink_base_url . "?docid=01UODE_ALMA" . substr($data, 15, -30) . "&context=L&vid=01UODE_MAIN&search_scope=everything_scope&tab=default_tab&lang=en_US";
-        $body = $body . "\nPermalink:\t\t" . $permalink . "\n";
+        $pattern = '/01UODE_INST:[0-9][0-9]+/'; // Locate the doc id, which appears after the institution code
+        $matches = array();
+        if(preg_match($pattern, $data, $matches) === 1) {
+          $docid = substr($matches[0], 12); // Remove the institution code
+          $permalink = $permalink_base_url . "?docid=01UODE_ALMA" . $docid . "&context=L&vid=01UODE_MAIN&search_scope=everything_scope&tab=default_tab&lang=en_US";
+          $body = $body . "\nPermalink:\t\t" . $permalink . "\n";
+        }
+        else {
+          $body = $body . "\nPermalink is not available\n";
+        }
     }
     return $body;
 }
